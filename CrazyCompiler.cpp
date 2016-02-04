@@ -54,11 +54,11 @@ std::string read(char* fileName){
 }
 
 void interactive(){
-	std::cout << "entering interactive mode..." << std::endl;
+	std::cout << "\n entering interactive mode...\n" << std::endl;
 }
 
 void compile(){
-	std::cout << "entering compile mode..." << std::endl;
+	std::cout << "\n entering compile mode...\n" << std::endl;
 	
 	std::cout << "#include <iostream>\n\n" << std::endl;
 	std::cout << "static const int size = 1000;\n";
@@ -109,7 +109,7 @@ void compile(){
 
 
 void execute(){
-	std::cout << "entering execute mode..." << std::endl;
+	std::cout << "\n entering execute mode...\n" << std::endl;
 	for(int i = 0; i < code.length(); i++){
 		switch(code[i]){
 			case '+':
