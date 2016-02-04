@@ -6,16 +6,23 @@
 #include <fstream>
 #include <vector>
 
+void read(ifstream, vector<char>);
 void interactive();
-void compile(ifstream);
-void execute(ifstream);
-
+void compile(vector);
+void execute(vector);
+bool test();
+int getLoopStart(int);
+int getLoopEnd(int);
 
 int main(int argc, char** argv){
 	
-	int size = 1000;
+	const int size = 1000;
 	int tape[size] = {};
 	int dp = 0;
+	std::vector<char> code;
+	
+	int* ins;
+	int* outs;
 	
 	if(argc == 0){
 		interactive(); 
@@ -23,12 +30,18 @@ int main(int argc, char** argv){
 		switch(argv[1]){
 			case 'c':
 			std::ifstream fin(argv[2]);
-			compile(fin);
+			read(fin);
+			if(test()){
+				compile(code);
+			}
 			break;
 			
 			case 'e':
 			std::ifstream fin(argv[2]);
-			execute(fin);
+			read(fin);
+			if(test()){
+				execute(code);
+			}
 			break;
 			
 			default:
@@ -41,14 +54,63 @@ int main(int argc, char** argv){
 	return 0;
 }
 
-void compile(ifstream fin){
-	
-	int brackets = 0;
-	
+void read(ifstream fin, vector<char> code){
 	std::vector<char> code;
 	while(fin){
 		code.push_back(getc(fin))
 	}
+}
+
+bool test(){
+	int x = 0;
+	int inB = 0;
+	int outB = 0;
+	
+	for(int i = 0; i < code.size(); i++){
+		switch(code[i]){
+			case '{':
+				x++;
+				inB++;
+				break;
+			
+			case '}':
+				outB++;
+				break;
+		}
+		if(outB > inB){
+			return false;
+		}
+	}
+	
+	ins = new int[x];
+	outs = new int[x];
+	int inAt = 0;
+	ont outAt = 0;
+	
+	for(int i = 0; i < code.size(); i++){
+		switch(code[i]){
+			case '{':
+				ins[inAt] = i;
+				outAt = inAt;
+				inAt++;
+				break;
+				
+			case '}':
+				for(int j = outAt; j >= 0; j--){
+					if(outs[j] == 0){
+						outs[j] = i;
+						break;
+					}
+				}
+				break:
+		}
+	}
+	return true;
+}
+
+void compile(code){
+	
+	
 	for(int i = 0; i < code.size(); i++){
 		switch(code[1]){
 			case '+':
@@ -93,6 +155,8 @@ void compile(ifstream fin){
 					}
 					i++;
 				}
+			}else{
+				inPoint = i;
 			}
 			break;
 			
