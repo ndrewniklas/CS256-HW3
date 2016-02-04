@@ -6,15 +6,15 @@
 #include <fstream>
 #include <vector>
 
-void read(ifstream, vector<char>);
+void read(std::ifstream, std::vector<char>);
 void interactive();
-void compile(vector);
-void execute(vector);
-bool test();
+void compile(int[], int, std::vector<char>);
+void execute(int[], int, std::vector<char>);
+bool test(std::vector<char>, int*, int*);
 int getLoopStart(int);
 int getLoopEnd(int);
 
-int main(int argc, char** argv){
+int main(int argc, char* argv[]){
 	
 	const int size = 1000;
 	int tape[size] = {};
@@ -27,41 +27,35 @@ int main(int argc, char** argv){
 	if(argc == 0){
 		interactive(); 
 	}else{
-		switch(argv[1]){
-			case 'c':
-			std::ifstream fin(argv[2]);
-			read(fin);
-			if(test()){
-				compile(code);
+		std::ifstream fin(argv[2]);
+		read(fin, code);
+		if(test(code, ins, outs)){
+			if(*argv[1] == 'c'){
+				compile(tape, dp, code);
+			}else if(*argv[1] == 'e'){
+				execute(tape, dp, code);
+			}else{
+				std::cout << "Invalid argument!  crazy [-ce] [filename.cz]" << std::endl;
+				std::cout << "   -c \t compile the given file into C++ and print it out\n";
+				std::cout << "   -e \t execute the given file directly" << std::endl;
 			}
-			break;
-			
-			case 'e':
-			std::ifstream fin(argv[2]);
-			read(fin);
-			if(test()){
-				execute(code);
-			}
-			break;
-			
-			default:
-			std::cout << "Invalid argument!  crazy [-ce] [filename.cz]" << std::endl;
-			std::cout << "   -c \t compile the given file into C++ and print it out\n";
-			std::cout << "   -e \t execute the given file directly" << std::endl;
-			break;
 		}
 	}
+	
+	delete [] ins;
+	delete [] outs;
+	
 	return 0;
 }
 
-void read(ifstream fin, vector<char> code){
-	std::vector<char> code;
+void read(std::ifstream fin, std::vector<char> code){
+	
 	while(fin){
-		code.push_back(getc(fin))
+		code.push_back(getc(fin));
 	}
 }
 
-bool test(){
+bool test(std::vector<char> code, int* ins, int* outs){
 	int x = 0;
 	int inB = 0;
 	int outB = 0;
@@ -85,7 +79,7 @@ bool test(){
 	ins = new int[x];
 	outs = new int[x];
 	int inAt = 0;
-	ont outAt = 0;
+	int outAt = 0;
 	
 	for(int i = 0; i < code.size(); i++){
 		switch(code[i]){
@@ -102,14 +96,13 @@ bool test(){
 						break;
 					}
 				}
-				break:
+				break;
 		}
 	}
 	return true;
 }
 
-void compile(code){
-	
+void execute(int tape[], int dp, std::vector<char> code){
 	
 	for(int i = 0; i < code.size(); i++){
 		switch(code[1]){
@@ -131,7 +124,7 @@ void compile(code){
 			
 			case '<':
 			if(dp == 0){
-				dp = 999
+				dp = 999;
 			}else{
 				dp--;
 			}
@@ -146,22 +139,12 @@ void compile(code){
 			break;
 			
 			case '{':
-			if(tape[dp] == 0){
-				while(brackets != 0){
-					if (code[i] == '{'){
-						brackets++;
-					}else if(code[i] == '}'){
-						brackets--
-					}
-					i++;
-				}
-			}else{
-				inPoint = i;
-			}
+			
 			break;
 			
 			case '}':
 			
+			break;
 		}
 		
 	}
