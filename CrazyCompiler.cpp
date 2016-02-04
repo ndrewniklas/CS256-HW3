@@ -8,21 +8,23 @@
 
 void read(std::ifstream, std::vector<char>);
 void interactive();
-void compile(int[], int, std::vector<char>);
-void execute(int[], int, std::vector<char>);
-bool test(std::vector<char>, int*, int*);
+void compile();
+void execute();
+bool test();
 int getLoopStart(int);
 int getLoopEnd(int);
 
+static const int size = 1000;
+static int tape[size] = {};
+static int dp = 0;
+static std::vector<char> code;
+
+static int* ins;
+static int* outs;
+	
 int main(int argc, char* argv[]){
 	
-	const int size = 1000;
-	int tape[size] = {};
-	int dp = 0;
-	std::vector<char> code;
 	
-	int* ins;
-	int* outs;
 	
 	if(argc == 0){
 		interactive(); 
@@ -48,14 +50,14 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-void read(std::ifstream fin, std::vector<char> code){
+void read(){
 	
 	while(fin){
 		code.push_back(getc(fin));
 	}
 }
 
-bool test(std::vector<char> code, int* ins, int* outs){
+bool test(){
 	int x = 0;
 	int inB = 0;
 	int outB = 0;
@@ -102,7 +104,7 @@ bool test(std::vector<char> code, int* ins, int* outs){
 	return true;
 }
 
-void execute(int tape[], int dp, std::vector<char> code){
+void execute(){
 	
 	for(int i = 0; i < code.size(); i++){
 		switch(code[1]){
