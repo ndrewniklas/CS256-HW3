@@ -9,7 +9,7 @@
 std::string read(char*);
 void interactive();
 void compile();
-void execute();
+void execute(std::string);
 int getLoopStart(int);
 int getLoopEnd(int);
 
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
 		if(std::string(argv[1]) == "-c"){
 			compile();
 		}else if(std::string(argv[1]) == "-e"){
-			execute();
+			execute(code);
 		}else{
 			std::cout << "Invalid argument!  crazy [-ce] [filename.cz]" << std::endl;
 			std::cout << "   -c \t compile the given file into C++ and print it out\n";
@@ -60,46 +60,50 @@ void interactive(){
 void compile(){
 	std::cout << "\n entering compile mode...\n" << std::endl;
 	
-	std::cout << "#include <iostream>\n\n" << std::endl;
-	std::cout << "static const int size = 1000;\n";
-	std::cout << "static int tape[size] = {0};\n";
-	std::cout << "static int* dp = tape;\n" << std::endl;
+	std::cout << "#include <iostream>\n" << std::endl;
+	std::cout << "const int SIZE = 1000;\n";
+	std::cout << "int tape[SIZE] = {0};\n";
+	std::cout << "int* dp = tape;\n" << std::endl;
 	std::cout << "int main(){" << std::endl;
 	
+	int count = 1;	
 	for (int i = 0; i < code.length(); ++i){
+		for(int t = count; t > 0; --t){
+				std::cout << "\t";
+		}
 		switch(code[i]){
 			case '+':
-			std::cout << "\t(*dp)++;" << std::endl;
+			std::cout << "++*dp;" << std::endl;
 			break;
 			
 			case '-':
-			std::cout << "\t(*dp)--;" << std::endl;
+			std::cout << "--*dp;" << std::endl;
 			break;
 			
 			case '>':
-			std::cout << "\tif((dp - tape) == 999){\n\t\tdp = tape;\n";
-			std::cout << "\t}else{\n\t\tdp++;\n\t}" << std::endl;
+			std::cout << "++dp;" << std::endl;
 			break;
 			
 			case '<':
-			std::cout << "\tif((dp - tape) == 0){\n\t\tdp += 999;\n";
-			std::cout << "\t}else{\n\t\tdp--;\n\t}" << std::endl;
+			std::cout << "--dp;" << std::endl;
 			break;
 			
 			case ':':
-			std::cout << "\tstd::cout << dp << std::endl;" << std::endl;
+			std::cout << "std::cout << dp << std::endl;" << std::endl;
 			break;
 			
 			case '.':
-			std::cout << "\tstd::cout << (char)*dp << std::endl;" << std::endl;
+			std::cout << "std::cout << ((char)*dp);" << std::endl;
 			break;
 			
 			case '{':
-			std::cout << "\twhile (*dp == 0){" << std::endl;
+			++count;
+			std::cout << "while (*dp){" << std::endl;
 			break;
 			
 			case '}':
-			std::cout << "\t}" << std::endl;
+			--count;
+			std::cout << "}" << std::endl;
 			break;
 		}
 	}
@@ -108,51 +112,64 @@ void compile(){
 }
 
 
-void execute(){
+void execute(std::string code){
 	std::cout << "\n entering execute mode...\n" << std::endl;
+	int brkts = 0;
 	for(int i = 0; i < code.length(); i++){
 		switch(code[i]){
 			case '+':
-			(*dp)++;
+			++*dp;
 			break;
 			
 			case '-':
-			(*dp)--;
+			--*dp;
 			break;
 			
 			case '>':
-			if((dp - tape) == 999){
-				dp = tape;
-			}else{
-				dp++;
-			}
+			++dp;
 			break;
 			
 			case '<':
-			if((dp - tape) == 0){
-				dp += 999;
-			}else{
-				dp--;
-			}
+			--dp
 			break;
 			
 			case ':':
-			std::cout << dp << std::endl;
+			std::cout << dp;
 			break;
 			
 			case '.':
-			std::cout << (char)*dp << std::endl;
+			std::cout << ((char)*dp);
 			break;
 			
 			case '{':
 				if(*dp == 0){
-				
+					brkts = 1;
+					int j = i + 1;
+					while(brkts != 0){
+						if(code[j] == '{'){
+							++brkts;
+						}else if(code[j] == '}'){
+							--brkts;
+						}
+						++j;
+					}
+					i = j;
+					//execute(code.substr(i+1, j));
 				}
-			
 			break;
 			
 			case '}':
-			
+				brkts = -1;
+					int j = i - 1;
+					while(brkts != 0){
+						if(code[j] == '{'){
+							++brkts;
+						}else if(code[j] == '}'){
+							--brkts;
+						}
+						--j;
+					}
+					i = j;
 			break;
 		}
 		
