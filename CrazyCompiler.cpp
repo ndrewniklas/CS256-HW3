@@ -89,7 +89,7 @@ void compile(){
 			break;
 			
 			case ':':
-			std::cout << "std::cout << dp << std::endl;" << std::endl;
+			std::cout << "std::cout << *dp << std::endl;" << std::endl;
 			break;
 			
 			case '.':
@@ -130,11 +130,11 @@ void execute(std::string code){
 			break;
 			
 			case '<':
-			--dp
+			--dp;
 			break;
 			
 			case ':':
-			std::cout << dp;
+			std::cout << *dp;
 			break;
 			
 			case '.':
@@ -153,8 +153,8 @@ void execute(std::string code){
 						}
 						++j;
 					}
-					i = j;
-					//execute(code.substr(i+1, j));
+					//i = j;
+					execute(code.substr(i + 1, i + j));
 				}
 			break;
 			

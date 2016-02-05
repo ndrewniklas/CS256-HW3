@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 const int SIZE = 1000;
 int tape[SIZE] = {0};
 int* dp = tape;
@@ -84,7 +83,7 @@ int main(){
 		++dp;
 		}
 	--dp;
-	std::cout << dp << std::endl;
+	std::cout << *dp << std::endl;
 	++dp;
 	++*dp;
 	++*dp;
@@ -99,4 +98,3 @@ int main(){
 	std::cout << ((char)*dp);
 	return 0;
 }
-
