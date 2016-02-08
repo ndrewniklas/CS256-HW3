@@ -8,6 +8,7 @@
 
 std::string read(char*);
 void interactive();
+void print(int point);
 void compile();
 void execute(std::string);
 int getLoopStart(int);
@@ -54,7 +55,49 @@ std::string read(char* fileName){
 }
 
 void interactive(){
-	std::cout << "\n entering interactive mode...\n" << std::endl;
+	std::string str;
+	//std::cout << "\n entering interactive mode...\n" << std::endl;
+	print(dp - tape);
+	std::cout << "\n: ";
+	std::getline(std::cin, str);
+	if(str != "exit"){
+		//std::cout << str << std::endl;
+		execute(str);
+		interactive();
+	}
+}
+
+void print(int point){
+	int min = point - 4;
+	int max = point + 5;
+	if(min < 0){
+		min = 0;
+		max = point + 9;
+	}else if(max > 999){
+		min = point - 9;
+		max = 999;
+	}
+	printf("%-20s", "\nIndex:");
+	for(int i = min; i < max; ++i){
+		std::cout << i << "\t";
+	}
+	printf("%-20s", "\nChar values:");
+	for(int i = min; i < max; ++i){
+	std::cout << ((char)code[i]) << "\t";
+	}
+	printf("%-20s", "\nInt values:");
+	for(int i = min; i < max; ++i){
+		std::cout << code[i] << "\t";
+	}
+	printf("%-20s", "\nData Pointer:");
+	for(int i = min; i < max; ++i){
+		if(i == point){
+			std::cout << "^\t";
+		}else{
+			std::cout << " \t";
+		}
+	}
+	std::cout << std::endl;
 }
 
 void compile(){
@@ -112,11 +155,11 @@ void compile(){
 }
 
 
-void execute(std::string code){
+void execute(std::string codex){
 	std::cout << "\n entering execute mode...\n" << std::endl;
 	int brkts = 0;
-	for(int i = 0; i < code.length(); i++){
-		switch(code[i]){
+	for(int i = 0; i < codex.length(); i++){
+		switch(codex[i]){
 			case '+':
 			++*dp;
 			break;
@@ -144,32 +187,32 @@ void execute(std::string code){
 			case '{':
 				if(*dp == 0){
 					brkts = 1;
-					int j = i + 1;
+					int j = i;
 					while(brkts != 0){
-						if(code[j] == '{'){
+						if(codex[j] == '{'){
 							++brkts;
-						}else if(code[j] == '}'){
+						}else if(codex[j] == '}'){
 							--brkts;
 						}
 						++j;
 					}
 					//i = j;
-					execute(code.substr(i + 1, i + j));
+					execute(codex.substr(i + 1, i + j - 1));
 				}
 			break;
 			
 			case '}':
 				brkts = -1;
-					int j = i - 1;
-					while(brkts != 0){
-						if(code[j] == '{'){
-							++brkts;
-						}else if(code[j] == '}'){
-							--brkts;
-						}
-						--j;
+				int j = i - 1;
+				while(brkts != 0){
+					if(codex[j] == '{'){
+						++brkts;
+					}else if(codex[j] == '}'){
+						--brkts;
 					}
-					i = j;
+					--j;
+				}
+				i = j;
 			break;
 		}
 		
