@@ -161,7 +161,7 @@ void compile(){
 
 void execute(std::string codex){
 	//std::cout << "\n entering execute mode...\n" << std::endl;
-	std::cout << "codex: " << codex << std::endl;
+	//std::cout << "codex: " << codex << std::endl;
 	int brkts = 0;
 	for(int i = 0; i < codex.length(); i++){
 		switch(codex[i]){
@@ -200,35 +200,24 @@ void execute(std::string codex){
 						--brkts;
 					}
 					++j;
-					std::cout << "end of while: " << j << std::endl;
+					//std::cout << "end of while: " << j << std::endl;
 				}
 				
 				if(*dp == 0){
 					i = j;
 				}else{
-					int start = i;
-					int len = j - i;
-					std::cout << "start:" << start << "\tlength:" << len << std::endl;
+					int start = i + 1;
+					int len = j - 2;
+					//std::cout << "start:" << start << "\tlength:" << len << std::endl;
 					std::string sub = codex.substr(start, len);
-					std::cout << "sub: " << sub << std::endl;
+					//std::cout << "sub: " << sub << std::endl;
 					execute(sub);
+					--i;
 				}
 			}
 			break;
 			
-			case '}':{
-				brkts = 0;
-				int k = i;
-				while(brkts != 0){
-					if(codex[k] == '{'){
-						++brkts;
-					}else if(codex[k] == '}'){
-						--brkts;
-					}
-					--k;
-				}
-				i = k;
-			}
+			case '}':
 			break;
 		}
 		
