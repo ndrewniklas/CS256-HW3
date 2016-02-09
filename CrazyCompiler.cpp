@@ -69,12 +69,12 @@ void interactive(){
 
 void print(int point){
 	int min = point - 4;
-	int max = point + 5;
+	int max = min + 8;
 	if(min < 0){
 		min = 0;
-		max = point + 9;
+		max = min + 8;
 	}else if(max > 999){
-		min = point - 9;
+		min = max - 8;
 		max = 999;
 	}
 	printf("%-20s", "\nIndex:");
@@ -83,11 +83,15 @@ void print(int point){
 	}
 	printf("%-20s", "\nChar values:");
 	for(int i = min; i < max; ++i){
-	std::cout << ((char)code[i]) << "\t";
+		if (tape[i] < 32){
+			std::cout << "\\0\t";
+		}else{
+			std::cout << ((char)tape[i]) << "\t";
+		}
 	}
 	printf("%-20s", "\nInt values:");
 	for(int i = min; i < max; ++i){
-		std::cout << code[i] << "\t";
+		std::cout << tape[i] << "\t";
 	}
 	printf("%-20s", "\nData Pointer:");
 	for(int i = min; i < max; ++i){
@@ -101,7 +105,7 @@ void print(int point){
 }
 
 void compile(){
-	std::cout << "\n entering compile mode...\n" << std::endl;
+	//std::cout << "\n entering compile mode...\n" << std::endl;
 	
 	std::cout << "#include <iostream>\n" << std::endl;
 	std::cout << "const int SIZE = 1000;\n";
@@ -156,7 +160,7 @@ void compile(){
 
 
 void execute(std::string codex){
-	std::cout << "\n entering execute mode...\n" << std::endl;
+	//std::cout << "\n entering execute mode...\n" << std::endl;
 	int brkts = 0;
 	for(int i = 0; i < codex.length(); i++){
 		switch(codex[i]){
@@ -184,35 +188,38 @@ void execute(std::string codex){
 			std::cout << ((char)*dp);
 			break;
 			
-			case '{':
-				if(*dp == 0){
-					brkts = 1;
-					int j = i;
-					while(brkts != 0){
-						if(codex[j] == '{'){
-							++brkts;
-						}else if(codex[j] == '}'){
-							--brkts;
-						}
-						++j;
+			case '{':{
+				brkts = 0;
+				int j = i;
+				do{
+					if(codex[j] == '{'){
+						brkts++;
+					}else if(codex[j] == '}'){
+						brkts--;
 					}
-					//i = j;
-					execute(codex.substr(i + 1, i + j - 1));
+					j++;
+				}while(brkts != 0);
+				if(*dp == 0){
+					i = j + 1;
+				}else{
+					execute(codex.substr(i + 1, (j - 1)));
 				}
+			}
 			break;
 			
-			case '}':
-				brkts = -1;
-				int j = i - 1;
-				while(brkts != 0){
+			case '}':{
+				brkts = 0;
+				int j = i;
+				do{
 					if(codex[j] == '{'){
 						++brkts;
 					}else if(codex[j] == '}'){
 						--brkts;
 					}
 					--j;
-				}
+				}while(brkts != 0);
 				i = j;
+			}
 			break;
 		}
 		
