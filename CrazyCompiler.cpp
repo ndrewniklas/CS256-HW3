@@ -204,7 +204,7 @@ void execute(std::string codex){
 				}
 				
 				if(*dp == 0){
-					i = j;
+					i = j - 1;
 				}else{
 					int start = i + 1;
 					int len = j - 2;
