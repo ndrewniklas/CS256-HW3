@@ -1,6 +1,6 @@
 //Andrew Niklas
 //Homework 3
-//2/10/2016
+//2/9/2016
 
 #include <iostream>
 #include <fstream>
