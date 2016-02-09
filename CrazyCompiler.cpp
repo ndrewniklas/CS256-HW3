@@ -190,21 +190,24 @@ void execute(std::string codex){
 			break;
 			
 			case '{':{
-				brkts = 0;
-				int j = i;
+				brkts = 1;
+				int j = i + 1;
 				while(brkts != 0){
 					if(codex[j] == '{'){
 						++brkts;
-					}else if(codex[j] == '}'){
+					}
+					if(codex[j] == '}'){
 						--brkts;
 					}
 					++j;
+					std::cout << "end of while: " << j << std::endl;
 				}
+				
 				if(*dp == 0){
 					i = j;
 				}else{
-					int start = i + 1;
-					int len = j - 1;
+					int start = i;
+					int len = j - i;
 					std::cout << "start:" << start << "\tlength:" << len << std::endl;
 					std::string sub = codex.substr(start, len);
 					std::cout << "sub: " << sub << std::endl;
