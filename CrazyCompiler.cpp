@@ -11,8 +11,6 @@ void interactive();
 void print(int point);
 void compile();
 void execute(std::string);
-int getLoopStart(int);
-int getLoopEnd(int);
 
 static const int size = 1000;
 static int tape[size] = {0};
@@ -207,7 +205,7 @@ void execute(std::string codex){
 					i = j - 1;
 				}else{
 					int start = i + 1;
-					int len = j - 2;
+					int len = (j - 1) - start;
 					//std::cout << "start:" << start << "\tlength:" << len << std::endl;
 					std::string sub = codex.substr(start, len);
 					//std::cout << "sub: " << sub << std::endl;
